@@ -5,7 +5,6 @@ import com.example.Parking.lot.enums.GateType;
 import com.example.Parking.lot.enums.SlotStatus;
 import com.example.Parking.lot.enums.SlotType;
 import com.example.Parking.lot.models.Parking;
-import com.example.Parking.lot.models.Slot;
 import com.example.Parking.lot.services.ParkingService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -60,6 +59,12 @@ public class BaseTest {
         Parking parking = parkingController.getParkings().get(0);
         Assertions.assertEquals(parking.getFloors().size(), 3);
         Assertions.assertEquals(parking.getGates().size(), 5);
+
+        //Create car
+        //Check if car can be parked
+        //Generate ticket
+        //Park Car
+        //Pay Fees and checkout car
 
     }
 
