@@ -8,9 +8,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Payment {
-    String paymentId;
-    PaymentMode paymentMode;
-    PaymentStatus paymentStatus;
-    int amount;
-    Ticket ticket;
+    private String paymentId;
+    private PaymentMode paymentMode;
+    private PaymentStatus paymentStatus;
+    private int amount;
+    private Ticket ticket;
 }

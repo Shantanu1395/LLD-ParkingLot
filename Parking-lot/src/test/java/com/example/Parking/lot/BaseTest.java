@@ -49,21 +49,21 @@ public class BaseTest {
         List<String> floor2Slots = new ArrayList<>();
         List<String> floor3Slots = new ArrayList<>();
         for(int i = 0; i < 5; i++){
-            floor1Slots.add(parkingController.createSlot(SlotType.ELECTRIC_CAR, SlotStatus.AVAILABLE, floor1));
-            floor1Slots.add(parkingController.createSlot(SlotType.TRUCK, SlotStatus.AVAILABLE, floor1));
-            floor1Slots.add(parkingController.createSlot(SlotType.VAN, SlotStatus.AVAILABLE, floor1));
+            floor1Slots.add(parkingController.createSlot(SlotType.ELECTRIC_CAR, floor1));
+            floor1Slots.add(parkingController.createSlot(SlotType.TRUCK, floor1));
+            floor1Slots.add(parkingController.createSlot(SlotType.VAN, floor1));
         }
         for(int i = 0; i < 10; i++){
-            floor2Slots.add(parkingController.createSlot(SlotType.CAR, SlotStatus.AVAILABLE, floor2));
+            floor2Slots.add(parkingController.createSlot(SlotType.CAR, floor2));
         }
         for(int i = 0; i < 20; i++){
-            floor3Slots.add(parkingController.createSlot(SlotType.MOTOR_BIKE, SlotStatus.AVAILABLE, floor3));
+            floor3Slots.add(parkingController.createSlot(SlotType.MOTOR_BIKE, floor3));
         }
         floorSlots.add(floor1Slots);
         floorSlots.add(floor2Slots);
         floorSlots.add(floor3Slots);
 
-        Parking parking = parkingController.getParkings().get(0);
+        Parking parking = parkingController.getParkingList().get(0);
         Assertions.assertEquals(parking.getFloors().size(), 3);
         Assertions.assertEquals(parking.getGates().size(), 5);
 

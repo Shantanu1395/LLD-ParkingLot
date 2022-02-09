@@ -7,8 +7,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Gate {
-    String gateId;
-    String name;
-    GateType gateType;
-    Parking parking;
+    private String gateId;
+    private String name;
+    private GateType gateType;
+    private Parking parking;
 }

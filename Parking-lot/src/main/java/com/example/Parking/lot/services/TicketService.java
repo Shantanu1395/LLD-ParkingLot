@@ -6,8 +6,8 @@ import com.example.Parking.lot.models.Payment;
 import com.example.Parking.lot.models.Slot;
 import com.example.Parking.lot.models.Ticket;
 import com.example.Parking.lot.models.Vehicle;
+import lombok.NonNull;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -17,10 +17,10 @@ import java.util.UUID;
 
 public class TicketService {
 
-    Map<String, Ticket> ticketMap;
-    ParkingService parkingService;
-    Map<String, Vehicle> vehicleMap;
-    Map<String, Payment> paymentMap;
+    private Map<String, Ticket> ticketMap;
+    private ParkingService parkingService;
+    private Map<String, Vehicle> vehicleMap;
+    private Map<String, Payment> paymentMap;
 
     public TicketService(ParkingService parkingService) {
         this.parkingService = parkingService;
@@ -29,11 +29,12 @@ public class TicketService {
         this.paymentMap = new HashMap<>();
     }
 
-    public Ticket generateTicket(String vehicleNumber, SlotType vehicleType, String gateId, String parkingId){
+    public Ticket generateTicket(@NonNull final String vehicleNumber, @NonNull final SlotType vehicleType, @NonNull final String gateId, @NonNull final String parkingId){
+
         Slot slot = parkingService.getSlot(vehicleType, parkingId);
-        if (slot == null){
-            throw new RuntimeException("Can not assign slot for this vehicle type");
-        }
+
+        if (slot == null) throw new RuntimeException("Can not assign slot for this vehicle type");
+
         String ticketId = UUID.randomUUID().toString();
         Ticket ticket = new Ticket(ticketId, gateId, slot.getId(), vehicleNumber, 0, null, TicketStatus.ONGOING, LocalDateTime.now());
         Vehicle vehicle = new Vehicle(vehicleNumber, vehicleType);
@@ -46,9 +47,10 @@ public class TicketService {
     }
 
     //Implement payed at using strategy design pattern
-    public int payFees(String vehicleId, PaymentMode paymentMode){
-        if(!vehicleMap.containsKey(vehicleId))
-            throw new RuntimeException("Vehicle doesn't exist");
+    public int payFees(@NonNull final String vehicleId, @NonNull final PaymentMode paymentMode){
+
+        if(!vehicleMap.containsKey(vehicleId)) throw new RuntimeException("Vehicle doesn't exist");
+
         Vehicle vehicle = vehicleMap.get(vehicleId);
         List<Ticket> ticketList = vehicle.getTrips();
         Ticket ticket = ticketList.get(ticketList.size() - 1);
@@ -73,21 +75,26 @@ public class TicketService {
         return cost;
     }
 
-    public void checkoutVehicle(String vehicleId) {
-        if(!vehicleMap.containsKey(vehicleId))
-            throw new RuntimeException("Vehicle doesn't exist");
+    public void checkoutVehicle(@NonNull final String vehicleId) {
+
+        if(!vehicleMap.containsKey(vehicleId)) throw new RuntimeException("Vehicle doesn't exist");
+
         Vehicle vehicle = vehicleMap.get(vehicleId);
         Ticket currentTicket = vehicle.getTrips().get(0);
+
+        if(currentTicket.getTicketStatus().equals(TicketStatus.ONGOING)) throw new RuntimeException("Can't checkout vehicle, pay fee first");
+
         if(currentTicket.getTicketStatus().equals(TicketStatus.FEES_PAID)){
             vehicle.getSlot().setSlotStatus(SlotStatus.AVAILABLE);
             currentTicket.setTicketStatus(TicketStatus.CHECKOUT_DONE);
-        }else{
-            throw new RuntimeException("Can't checkout vehicle, pay fee first");
         }
+
     }
 
-    public void setTicketIssuedAt(String ticketId, LocalDateTime time) {
-        if(!ticketMap.containsKey(ticketId)) throw new RuntimeException("Error, ticket not found");
+    public void setTicketIssuedAt(@NonNull final String ticketId, @NonNull final LocalDateTime time) {
+
+        if(!ticketMap.containsKey(ticketId)) throw new RuntimeException("Error, ticket not found in datastore");
+
         Ticket ticket = ticketMap.get(ticketId);
         ticket.setIssuedAt(time);
     }

@@ -4,28 +4,29 @@ import com.example.Parking.lot.enums.SlotStatus;
 import com.example.Parking.lot.enums.SlotType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 
 @Getter
 public class Slot {
 
-    String id;
-    SlotType slotType;
-    SlotStatus slotStatus;
-    Floor floor;
-    Vehicle vehicle;
+    private String id;
+    private SlotType slotType;
+    private SlotStatus slotStatus;
+    private Floor floor;
+    private Vehicle vehicle;
 
-    public Slot(String id, SlotType slotType, SlotStatus slotStatus, Floor floor) {
-        this.id = id;
+    public Slot(@NonNull final String slotID, @NonNull final SlotType slotType, @NonNull final SlotStatus slotStatus, @NonNull final Floor floor) {
+        this.id = slotID;
         this.slotType = slotType;
         this.slotStatus = slotStatus;
         this.floor = floor;
     }
 
-    public void assignVehicleToSlot(Vehicle vehicle){
+    public void assignVehicleToSlot(@NonNull final Vehicle vehicle){
         this.vehicle = vehicle;
     }
 
-    public void setSlotStatus(SlotStatus slotStatus){
+    public void setSlotStatus(@NonNull final SlotStatus slotStatus){
         this.slotStatus = slotStatus;
     }
 
