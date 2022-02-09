@@ -92,7 +92,7 @@ public class BaseTest {
         try {
             String ticket6 = ticketController.generateTicket(vehicleNo6, SlotType.ELECTRIC_CAR, gate1, parkingId);
         }catch (RuntimeException runtimeException){
-            Assertions.assertEquals(runtimeException.getMessage(), "Can not assign slot for this vehicle type");
+            Assertions.assertEquals(runtimeException.getMessage(), "Can't assign slot for this vehicle type");
         }
 
         //Pay fees before checkout

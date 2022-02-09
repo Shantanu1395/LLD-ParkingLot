@@ -36,7 +36,7 @@ public class TicketService {
 
         Slot slot = parkingService.getSlot(vehicleType, parkingId);
 
-        if (slot == null) throw new SlotNotFoundException("Can not assign slot for this vehicle type");
+        if (slot == null) throw new SlotNotFoundException("Can't assign slot for this vehicle type");
 
         String ticketId = UUID.randomUUID().toString();
         Ticket ticket = new Ticket(ticketId, gateId, slot.getId(), vehicleNumber, 0, null, TicketStatus.ONGOING, LocalDateTime.now());
