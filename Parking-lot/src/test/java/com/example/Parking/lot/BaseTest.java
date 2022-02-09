@@ -1,24 +1,31 @@
 package com.example.Parking.lot;
 
 import com.example.Parking.lot.controllers.ParkingController;
+import com.example.Parking.lot.controllers.TicketController;
 import com.example.Parking.lot.enums.GateType;
+import com.example.Parking.lot.enums.PaymentMode;
 import com.example.Parking.lot.enums.SlotStatus;
 import com.example.Parking.lot.enums.SlotType;
 import com.example.Parking.lot.models.Parking;
 import com.example.Parking.lot.services.ParkingService;
+import com.example.Parking.lot.services.TicketService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BaseTest {
 
     ParkingController parkingController;
+    TicketController ticketController;
 
     public void setupControllers(){
         ParkingService parkingService = new ParkingService();
+        TicketService ticketService = new TicketService(parkingService);
         parkingController = new ParkingController(parkingService);
+        ticketController = new TicketController(ticketService);
     }
 
     @Test
@@ -60,11 +67,50 @@ public class BaseTest {
         Assertions.assertEquals(parking.getFloors().size(), 3);
         Assertions.assertEquals(parking.getGates().size(), 5);
 
-        //Create car
-        //Check if car can be parked
-        //Generate ticket
-        //Park Car
-        //Pay Fees and checkout car
+        //1. Generate vehicle
+        //2. Generate ticket
+        //3. Pay Fees and checkout car
+
+        //1. Generate vehicle
+        String vehicleNo1 = parkingController.registerVehicle("101231", SlotType.ELECTRIC_CAR);
+        String vehicleNo2 = parkingController.registerVehicle("101232", SlotType.ELECTRIC_CAR);
+        String vehicleNo3 = parkingController.registerVehicle("101233", SlotType.ELECTRIC_CAR);
+        String vehicleNo4 = parkingController.registerVehicle("101234", SlotType.ELECTRIC_CAR);
+        String vehicleNo5 = parkingController.registerVehicle("101235", SlotType.ELECTRIC_CAR);
+        String vehicleNo6 = parkingController.registerVehicle("101236", SlotType.ELECTRIC_CAR);
+
+        //2. Generate ticket
+        String ticket1 = ticketController.generateTicket(vehicleNo1, SlotType.ELECTRIC_CAR, gate1, parkingId);
+        ticketController.setTicketIssuedAt(ticket1, LocalDateTime.now().minusHours(5));
+        String ticket2 = ticketController.generateTicket(vehicleNo2, SlotType.ELECTRIC_CAR, gate1, parkingId);
+        String ticket3 = ticketController.generateTicket(vehicleNo3, SlotType.ELECTRIC_CAR, gate1, parkingId);
+        String ticket4 = ticketController.generateTicket(vehicleNo4, SlotType.ELECTRIC_CAR, gate1, parkingId);
+        String ticket5 = ticketController.generateTicket(vehicleNo5, SlotType.ELECTRIC_CAR, gate1, parkingId);
+
+        //Assertions
+        //Will throw Exception - No slots available for Electric Car
+        try {
+            String ticket6 = ticketController.generateTicket(vehicleNo6, SlotType.ELECTRIC_CAR, gate1, parkingId);
+        }catch (RuntimeException runtimeException){
+            Assertions.assertEquals(runtimeException.getMessage(), "Can not assign slot for this vehicle type");
+        }
+
+        //Pay fees before checkout
+        try {
+            ticketController.checkoutVehicle(vehicleNo1);
+        }catch (RuntimeException runtimeException){
+            Assertions.assertEquals(runtimeException.getMessage(), "Can't checkout vehicle, pay fee first");
+        }
+
+        //Fees paid now vehicle can be checked checkout
+        int fees = ticketController.payFees(vehicleNo1, PaymentMode.CREDIT_CARD);
+        ticketController.checkoutVehicle(vehicleNo1);
+
+        //Assert fees paid
+        Assertions.assertEquals(fees, 350);
+
+        //Will be able to book slot now
+        String ticket6 = ticketController.generateTicket(vehicleNo6, SlotType.ELECTRIC_CAR, gate1, parkingId);
 
     }
 

@@ -6,12 +6,27 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class Slot {
 
     String id;
     SlotType slotType;
     SlotStatus slotStatus;
     Floor floor;
+    Vehicle vehicle;
+
+    public Slot(String id, SlotType slotType, SlotStatus slotStatus, Floor floor) {
+        this.id = id;
+        this.slotType = slotType;
+        this.slotStatus = slotStatus;
+        this.floor = floor;
+    }
+
+    public void assignVehicleToSlot(Vehicle vehicle){
+        this.vehicle = vehicle;
+    }
+
+    public void setSlotStatus(SlotStatus slotStatus){
+        this.slotStatus = slotStatus;
+    }
 
 }

@@ -46,4 +46,8 @@ public class ParkingController {
         return this.parkingService.getParkings();
     }
 
+    public String registerVehicle(String vehicleNumber, SlotType vehicleType){
+        this.parkingService.registerVehicle(vehicleNumber, vehicleType);
+        return vehicleNumber;
+    }
 }
