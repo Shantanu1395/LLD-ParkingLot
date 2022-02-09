@@ -2,6 +2,9 @@ package com.example.Parking.lot.services;
 
 import com.example.Parking.lot.constants.Constants;
 import com.example.Parking.lot.enums.*;
+import com.example.Parking.lot.exception.SlotNotFoundException;
+import com.example.Parking.lot.exception.TicketNotFoundException;
+import com.example.Parking.lot.exception.VehicleNotFoundException;
 import com.example.Parking.lot.models.Payment;
 import com.example.Parking.lot.models.Slot;
 import com.example.Parking.lot.models.Ticket;
@@ -33,7 +36,7 @@ public class TicketService {
 
         Slot slot = parkingService.getSlot(vehicleType, parkingId);
 
-        if (slot == null) throw new RuntimeException("Can not assign slot for this vehicle type");
+        if (slot == null) throw new SlotNotFoundException("Can not assign slot for this vehicle type");
 
         String ticketId = UUID.randomUUID().toString();
         Ticket ticket = new Ticket(ticketId, gateId, slot.getId(), vehicleNumber, 0, null, TicketStatus.ONGOING, LocalDateTime.now());
@@ -49,7 +52,7 @@ public class TicketService {
     //Implement payed at using strategy design pattern
     public int payFees(@NonNull final String vehicleId, @NonNull final PaymentMode paymentMode){
 
-        if(!vehicleMap.containsKey(vehicleId)) throw new RuntimeException("Vehicle doesn't exist");
+        if(!vehicleMap.containsKey(vehicleId)) throw new VehicleNotFoundException("Vehicle doesn't exist");
 
         Vehicle vehicle = vehicleMap.get(vehicleId);
         List<Ticket> ticketList = vehicle.getTrips();
@@ -77,7 +80,7 @@ public class TicketService {
 
     public void checkoutVehicle(@NonNull final String vehicleId) {
 
-        if(!vehicleMap.containsKey(vehicleId)) throw new RuntimeException("Vehicle doesn't exist");
+        if(!vehicleMap.containsKey(vehicleId)) throw new VehicleNotFoundException("Vehicle doesn't exist");
 
         Vehicle vehicle = vehicleMap.get(vehicleId);
         Ticket currentTicket = vehicle.getTrips().get(0);
@@ -93,7 +96,7 @@ public class TicketService {
 
     public void setTicketIssuedAt(@NonNull final String ticketId, @NonNull final LocalDateTime time) {
 
-        if(!ticketMap.containsKey(ticketId)) throw new RuntimeException("Error, ticket not found in datastore");
+        if(!ticketMap.containsKey(ticketId)) throw new TicketNotFoundException("Error, ticket not found in datastore");
 
         Ticket ticket = ticketMap.get(ticketId);
         ticket.setIssuedAt(time);
