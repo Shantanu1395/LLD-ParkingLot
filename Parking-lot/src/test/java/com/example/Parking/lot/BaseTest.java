@@ -4,7 +4,6 @@ import com.example.Parking.lot.controllers.ParkingController;
 import com.example.Parking.lot.controllers.TicketController;
 import com.example.Parking.lot.enums.GateType;
 import com.example.Parking.lot.enums.PaymentMode;
-import com.example.Parking.lot.enums.SlotStatus;
 import com.example.Parking.lot.enums.SlotType;
 import com.example.Parking.lot.models.Parking;
 import com.example.Parking.lot.services.ParkingService;
@@ -30,6 +29,7 @@ public class BaseTest {
 
     @Test
     public void testInfra(){
+
         setupControllers();
 
         String parkingId = parkingController.createParking("Deltin Parking");
@@ -111,7 +111,6 @@ public class BaseTest {
 
         //Will be able to book slot now
         String ticket6 = ticketController.generateTicket(vehicleNo6, SlotType.ELECTRIC_CAR, gate1, parkingId);
-
     }
 
 }
